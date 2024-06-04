@@ -1,0 +1,59 @@
+﻿@model EShop.Presentation.Models.Basket.BasketViewModel
+@{
+    ViewBag.Title = "My Basket";
+    Layout = "_Layout";
+}
+
+<h1>My Basket</h1>
+
+@if (Model.Items.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Product.Description</td>
+                    <td>@item.Product.Price</td>
+                     <td>
+                         <form method="post" action="@Url.Action("UpdateQuantity", "Basket")">
+                             <input type="hidden" name="basketId" value="@Model.Id"/>
+                             <input type="hidden" name="basketItemId" value="@item.Id"/>
+                             <input type="number" name="quantity" value="@item.Quantity" min="1"/>
+                             <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                         </form>
+                    </td>
+                    <td>@(item.Product.Price * item.Quantity)</td>
+                    <td>
+                        <form method="post" action="@Url.Action("RemoveItem", "Basket")">
+                            <input type="hidden" name="basketId" value="@Model.Id"/>
+                            <input type="hidden" name="itemId" value="@item.Id"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>Total Price: @Model.TotalPrice</div>
+
+    <a href="@Url.Action("ProceedToCheckout", "Order")" class="btn btn-primary mb-1">Proceed to Checkout</a>
+    <form method="post" action="@Url.Action("ClearBasket", "Basket")">
+        <input type="hidden" name="basketId" value="@Model.Id"/>
+        <button type="submit" class="btn btn-warning">Clear Basket</button>
+    </form>
+}
+else
+{
+    <p>Your basket is empty.</p>
+}

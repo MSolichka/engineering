@@ -1,0 +1,38 @@
+﻿services:
+  eshop.db:
+    image: postgres
+    environment:
+      POSTGRES_USER: eshop
+      POSTGRES_PASSWORD: eshop
+      POSTGRES_DB: EShop
+#    ports:
+#      - "5432:5432"
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U eshop -d EShop -h eshop.db -p 5432"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+    volumes:
+      - /var/lib/postgresql/data
+  eshop.presentation:
+    image: valera17/eshop_pmi32
+    ports:
+      - "5000:8080"
+    restart: unless-stopped
+#    build:
+#      context: .
+#      dockerfile: EShop.Presentation/Dockerfile
+    depends_on:
+      eshop.db:
+        condition: service_healthy
+      
+  
+#  eshop.seq:
+#    image: datalust/seq:latest
+#    ports:
+#      - "5341:5341"
+#      - "8081:80"
+#    environment:
+#      ACCEPT_EULA: Y
+#    volumes:
+#      - ./volumes/seq-data:/data

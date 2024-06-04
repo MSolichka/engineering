@@ -1,0 +1,56 @@
+﻿@model List<EShop.Presentation.Models.User.UserListViewModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+@if (!Model.Any())
+{
+    <h1>No Users</h1>
+}
+else
+{
+    <h1>User List</h1>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>User Type</th>
+                <th>Confirmed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.UserType</td>
+                    <td>@user.IsConfirmed</td>
+                    <td>
+                    @{
+                        if(user.UserType is "Admin")
+                        {
+                            <button disabled class="btn btn-primary" >Edit</button>
+                            <button disabled class="btn btn-danger" >Delete</button>
+                        }
+                        else
+                        {
+                            if (!user.IsConfirmed)
+                            { 
+                                <a asp-controller="User" asp-action="ConfirmUser" asp-route-id="@user.Id" class="btn btn-danger" >Confirm</a>
+                            }
+                            <a href=@Url.Action("Edit", "User", new { id = user.Id }) class="btn btn-primary">Edit</a>
+                            <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger" >Delete</a>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

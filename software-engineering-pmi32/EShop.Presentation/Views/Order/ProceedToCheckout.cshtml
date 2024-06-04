@@ -1,0 +1,25 @@
+﻿@model EShop.Presentation.Models.Order.ProceedOrderViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h1>Proceed to Checkout</h1>
+
+<div>
+    <h4>Order Summary</h4>
+    <p>Total Price: $@Model.TotalPrice</p>
+    <p>Address: @Model.Address</p>
+</div>
+
+<form method="post" action="@Url.Action("PlaceOrder", "Order")">
+    <input type="hidden" name="basketId" value="@Model.BasketId" />
+    <input type="hidden" name="userId" value="@Model.UserId" />
+    <input type="hidden" name="totalPrice" value="@Model.TotalPrice" />
+    <div class="form-group">
+        <label for="address">Shipping Address:</label>
+        <input type="text" class="form-control" id="address" name="address" required />
+    </div>
+    <button type="submit" class="btn btn-success my-2">Place Order</button>
+</form>
