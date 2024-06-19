@@ -10,4 +10,5 @@ public interface IProductService
     Task<bool> DeleteProduct(Guid id);
     Task AddLikeToProduct(Guid productId, Guid userId);
     Task RemoveLikeFromProduct(Guid productId, Guid userId);
+    Task<List<GetProductDto>> SearchProducts(string query, int page, int pageSize);
 }

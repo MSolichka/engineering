@@ -165,4 +165,20 @@ public class ProductController : Controller
 
         return RedirectToAction("GetProduct", new { id = productId });
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Search(string query, int page = 1, int pageSize = 10)
+    {
+        var products = await _productService.SearchProducts(query, page, pageSize);
+        var productCount = await _productService.GetTotalProducts();
+        var viewModel = new ProductListVewModel
+        {
+            Products = products,
+            PageNumber = page,
+            PageSize = pageSize,
+            TotalItems = productCount,
+            SearchQuery = query
+        };
+        return View("Index", viewModel);
+    }
 }

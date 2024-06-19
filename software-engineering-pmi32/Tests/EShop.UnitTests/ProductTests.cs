@@ -248,4 +248,30 @@ public class ProductTests
         // Assert
         await act.Should().ThrowAsync<Exception>().WithMessage("Like not found");
     }
+    
+    [Fact]
+    public async Task SearchProducts_ShouldReturnFilteredProducts()
+    {
+        // Arrange
+        var products = new List<Domain.Models.Product>
+        {
+            new() { Id = Guid.NewGuid(), Description = "Product1" },
+            new() { Id = Guid.NewGuid(), Description = "Product2" },
+            new() { Id = Guid.NewGuid(), Description = "Other" }
+        };
+        var query = "Product";
+        var page = 1;
+        var pageSize = 10;
+        _productRepository.GetAllBySpecificationAsync(Arg.Any<SearchProductsSpecification>())
+            .Returns(Task.FromResult(products.Where(p => p.Description.Contains(query)).ToList()));
+
+        // Act
+        var result = await _productServices.SearchProducts(query, page, pageSize);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Count.Should().Be(2);
+        result.Should().Contain(p => p.Description == "Product1");
+        result.Should().Contain(p => p.Description == "Product2");
+    }
 }

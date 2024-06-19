@@ -26,6 +26,10 @@
     </div>
 }
 <h1>Product List</h1>
+@if (!string.IsNullOrEmpty(Model.SearchQuery))
+{
+    <p>Search results for: @Model.SearchQuery</p>
+}
 @if(Model.Products.Count == 0)
 {
     <p>No products found</p>

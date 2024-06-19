@@ -46,6 +46,23 @@ public class ProductService : IProductService
         return productsDto;
     }
     
+    public async Task<List<GetProductDto>> SearchProducts(string query, int page, int pageSize)
+    {
+        var products = await _repository.GetAllBySpecificationAsync(new SearchProductsSpecification(query, page, pageSize));
+        var productsDto = products.ConvertAll(p => new GetProductDto
+        {
+            Id = p.Id,
+            Price = p.Price,
+            Quantity = p.Quantity,
+            Description = p.Description,
+            Img = p.Img,
+            LikeCount = p.Likes.Count,
+            Type = p.Type
+        });
+
+        return productsDto;
+    }
+    
     public async Task<Domain.Models.Product> CreateProduct(CreateProductDto product)
     {
         var newProduct = _mapper.Map<Domain.Models.Product>(product);
